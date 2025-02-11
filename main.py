@@ -11,7 +11,7 @@ if __name__ == '__main__':
     
     st.title("Visualisation des données")
     
-    selection = st.pills("Choisissez un membre du groupe",
+    selection = st.pills("Choisissez des membres du groupe",
                          list(members_names.keys()),
                          selection_mode="multi")
     

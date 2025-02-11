@@ -20,6 +20,56 @@ def violin_plots(dfs, names):
     fig.update_yaxes(title_text="Time (s)")
     return fig
 
+def xyz_plot(dfs, names):
+    colors = px.colors.qualitative.Plotly
+    color_dict = {name: color for name, color in zip(names, colors)}
+    
+    fig = make_subplots(
+        rows=3,
+        cols=1,
+        shared_xaxes=True,
+        subplot_titles=["X", "Y", "Z"],
+        x_title="Time (s)",
+        y_title="Acceleration (g)"
+        )
+    
+    for df,name in zip(dfs,names):
+        fig.add_trace(
+            go.Scatter(x=df["time (s)"],
+                       y=df["X (g)"],
+                       mode='lines',
+                       name=name,
+                       legendgroup=name,
+                       line={"color" : color_dict[name]}
+                       ),
+            row=1,
+            col=1)
+        fig.add_trace(
+            go.Scatter(x=df["time (s)"],
+                       y=df["Y (g)"],
+                       mode='lines',
+                       name=name,
+                       legendgroup=name,
+                       line={"color" : color_dict[name]},
+                       showlegend=False
+                       ),
+            row=2, col=1)
+        fig.add_trace(
+            go.Scatter(
+                x=df["time (s)"],
+                y=df["Z (g)"],
+                mode='lines',
+                name=name,
+                legendgroup=name,
+                line={"color" : color_dict[name]},
+                showlegend=False
+                ),
+            row=3,
+            col=1
+            )
+    fig.update_layout(hovermode="x")
+    return fig
+
 def stacked_plot(dfs, names):
     n = len(names)
     
