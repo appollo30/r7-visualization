@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import glob
+import os
 
 def trim(df):
     first_sec = df.iloc[0]["Timestamp"]
@@ -11,7 +12,7 @@ def trim(df):
     return df
 
 def set_time(df):
-    df['time (s)'] = (df['Timestamp'] - df['Timestamp'].iloc[0]).dt.total_seconds()
+    df['time (s)'] = 0
     group = df.groupby("Timestamp")
 
     for idx, (name, group_df) in enumerate(group):
@@ -22,5 +23,18 @@ def set_time(df):
     return df
 
 if __name__ == "__main__":
-    files = glob.glob("../data/input/**")
-    print(files)
+    input_path = glob.glob("../data/input/*")
+    # Les noms de chaque membre du groupe, associés aux chemins de leurs fichiers
+    members_names = {os.path.basename(elt) : elt for elt in input_path}
+    
+    for name, path in members_names.items():
+        input_files = glob.glob(f"{path}/*")
+        print(name)
+        for f in input_files:
+            df = pd.read_csv(f)
+            df = trim(df)
+            df = set_time(df)
+            output_dir = f"../data/output/{name}"
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            df.to_csv(f"{output_dir}/{os.path.basename(f)}", index=False)
