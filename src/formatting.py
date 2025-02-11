@@ -19,6 +19,7 @@ def trim(df):
 
 def set_time(df):
     df['time (s)'] = 0
+    df['time (s)'] = df['time (s)'].astype(float)
     group = df.groupby("Timestamp")
 
     for idx, (name, group_df) in enumerate(group):
@@ -47,7 +48,6 @@ if __name__ == "__main__":
             df["acceleration (g)"] = df["acceleration (g)"].astype(float)
             df = trim(df)
             df = set_time(df)
-            df["time (s)"] = df["time (s)"].astype(float)
             output_dir = f"../data/output/{name}"
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)

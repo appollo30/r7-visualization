@@ -4,3 +4,4 @@ streamlit
 tqdm
 matplotlib
 plotly
+ipykernel
