@@ -2,6 +2,12 @@ import pandas as pd
 import numpy as np
 import glob
 import os
+from tqdm import tqdm
+
+
+def norm(df):
+    df["acceleration (g)"] = np.sqrt(df["X (g)"]**2 + df["Y (g)"]**2 + df["Z (g)"]**2)
+    return df
 
 def trim(df):
     first_sec = df.iloc[0]["Timestamp"]
@@ -32,8 +38,16 @@ if __name__ == "__main__":
         print(name)
         for f in input_files:
             df = pd.read_csv(f)
+            print(f"Processing {f}")
+            df["Timestamp"] = pd.to_datetime(df["Timestamp"])
+            df["X (g)"] = df["X (g)"].astype(float)
+            df["Y (g)"] = df["Y (g)"].astype(float)
+            df["Z (g)"] = df["Z (g)"].astype(float)
+            df = norm(df)
+            df["acceleration (g)"] = df["acceleration (g)"].astype(float)
             df = trim(df)
             df = set_time(df)
+            df["time (s)"] = df["time (s)"].astype(float)
             output_dir = f"../data/output/{name}"
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
