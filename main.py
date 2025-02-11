@@ -1,6 +1,8 @@
 import streamlit as st
 import glob
 import os
+from src.utils import load_data
+from src.plots import single_line_graph, multi_line_graph
 
 if __name__ == '__main__':
     input_path = glob.glob("./data/output/*")
