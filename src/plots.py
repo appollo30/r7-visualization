@@ -6,7 +6,14 @@ def multi_line_graph(dfs, names, mode='lines'):
     fig = go.Figure()
     
     for df,name in zip(dfs,names):
-        fig.add_trace(go.Scatter(x=df["time (s)"], y=df["acceleration (g)"], mode=mode, name=name))
+        fig.add_trace(
+            go.Scatter(
+                x=df["time (s)"],
+                y=df["acceleration (g)"],
+                mode=mode,
+                name=name
+                )
+            )
     fig.update_layout(hovermode="x")
     fig.update_xaxes(title_text="Time (s)")
     fig.update_yaxes(title_text="Acceleration (g)")
