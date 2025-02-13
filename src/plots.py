@@ -3,11 +3,14 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 class MovementData:
+    COLORS = px.colors.qualitative.Plotly
+    
     def __init__(self, dfs, names):
         if len(dfs) != len(names):
             raise ValueError("The number of dataframes and names must be the same")
         self.dfs = dfs
         self.names = names
+        self.color_dict = {name: color for name, color in zip(self.names, MovementData.COLORS)}
 
     def multi_line_plot(self):
         fig = go.Figure()
@@ -17,7 +20,8 @@ class MovementData:
                 go.Scatter(
                     x=df["time (s)"],
                     y=df["acceleration (g)"],
-                    name=name
+                    name=name,
+                    line={"color" : self.color_dict[name]}
                     )
                 )
         fig.update_layout(hovermode="x")
@@ -29,14 +33,19 @@ class MovementData:
         fig = go.Figure()
         
         for df,name in zip(self.dfs,self.names):
-            fig.add_trace(go.Violin(y=df["acceleration (g)"], name=name, box_visible=True, meanline_visible=True))
+            fig.add_trace(
+                go.Violin(
+                    y=df["acceleration (g)"],
+                    name=name,
+                    box_visible=True,
+                    meanline_visible=True,
+                    line={"color" : self.color_dict[name]}
+                    ),
+                )
         fig.update_yaxes(title_text="Time (s)")
         return fig
 
     def xyz_plot(self):
-        colors = px.colors.qualitative.Plotly
-        color_dict = {name: color for name, color in zip(self.names, colors)}
-        
         fig = make_subplots(
             rows=3,
             cols=1,
@@ -53,7 +62,7 @@ class MovementData:
                         mode='lines',
                         name=name,
                         legendgroup=name,
-                        line={"color" : color_dict[name]}
+                        line={"color" : self.color_dict[name]}
                         ),
                 row=1,
                 col=1)
@@ -63,7 +72,7 @@ class MovementData:
                         mode='lines',
                         name=name,
                         legendgroup=name,
-                        line={"color" : color_dict[name]},
+                        line={"color" : self.color_dict[name]},
                         showlegend=False
                         ),
                 row=2, col=1)
@@ -74,7 +83,7 @@ class MovementData:
                     mode='lines',
                     name=name,
                     legendgroup=name,
-                    line={"color" : color_dict[name]},
+                    line={"color" : self.color_dict[name]},
                     showlegend=False
                     ),
                 row=3,
@@ -85,9 +94,6 @@ class MovementData:
 
     def stacked_plot(self):
         n = len(self.names)
-        
-        colors = px.colors.qualitative.Plotly
-        color_dict = {name: color for name, color in zip(self.names, colors)}
         
         fig = make_subplots(rows=n,
                             cols=2,
@@ -105,7 +111,7 @@ class MovementData:
                     y=df["acceleration (g)"],
                     mode='lines',
                     name=name,
-                    line={"color" : color_dict[name]},
+                    line={"color" : self.color_dict[name]},
                     legendgroup=name
                     ),
                 row=i+1,
@@ -117,7 +123,7 @@ class MovementData:
                     name=name, 
                     box_visible=True, 
                     meanline_visible=True, 
-                    line={"color" : color_dict[name]},
+                    line={"color" : self.color_dict[name]},
                     legendgroup=name,
                     showlegend=False,
                     ), 
