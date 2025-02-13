@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import glob
 import os
+from src.plots import MovementData
 
 def setup():
     file_path = 'data/output'
@@ -19,7 +20,6 @@ def setup():
 def main():
     members = setup()
     members_names = list(members.keys())
-    graph_to_display = None
     
     st.title("Analyse des démarches des membres du groupe r7")
     with st.sidebar:
@@ -38,7 +38,20 @@ def main():
                 st.write(f"Vous avez choisi {select_box}")
                 dfs.append(members[name]["records"][select_box])
                 names.append(name)
+        movement_data = MovementData(dfs,names)
+        plot_dict = movement_data.make_all_plots()
     
+    with st.container():
+        if not plot_dict:
+            st.write("### Veuillez sélectionner des fichiers à analyser")
+        else:
+            segmented_control = st.segmented_control(
+                label="Type de graphe :",
+                options=list(plot_dict.keys()),
+                selection_mode="single",
+                default="Line"
+            )
+            st.plotly_chart(plot_dict[segmented_control])
 
 if __name__ == '__main__':
     main()
