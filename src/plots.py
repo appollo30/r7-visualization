@@ -2,7 +2,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def multi_line_graph(dfs, names, mode='lines'):
+def multi_line_plot(dfs, names):
     fig = go.Figure()
     
     for df,name in zip(dfs,names):
@@ -10,7 +10,6 @@ def multi_line_graph(dfs, names, mode='lines'):
             go.Scatter(
                 x=df["time (s)"],
                 y=df["acceleration (g)"],
-                mode=mode,
                 name=name
                 )
             )

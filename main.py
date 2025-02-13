@@ -1,27 +1,44 @@
 import streamlit as st
+import pandas as pd
 import glob
 import os
-from src.utils import select_random_file
-from src.plots import multi_line_graph
-import pandas as pd
+
+def setup():
+    file_path = 'data/output'
+    files = glob.glob(f"{file_path}/*")
+    members = {os.path.basename(f) : {"path": f} for f in files}
+    
+    for name, member in members.items():
+        member["records"] = {}
+        for record in glob.glob(f"{member['path']}/*"):
+            member["records"][os.path.basename(record)] = pd.read_csv(record)
+    
+    return members
+       
+
+def main():
+    members = setup()
+    members_names = list(members.keys())
+    graph_to_display = None
+    
+    st.title("Analyse des démarches des membres du groupe r7")
+    with st.sidebar:
+        dfs = []
+        names = []
+        st.markdown("## Sélectionnez les fichiers à analyser")
+        for name in members_names:
+            records = members[name]["records"]
+            file_names = list(records.keys())
+            select_box = st.selectbox(
+                f"Choisissez un fichier pour {name}", 
+                file_names,
+                index=None
+            )
+            if select_box:
+                st.write(f"Vous avez choisi {select_box}")
+                dfs.append(members[name]["records"][select_box])
+                names.append(name)
+    
 
 if __name__ == '__main__':
-    input_path = glob.glob("./data/output/*")
-    # Les noms de chaque membre du groupe, associés aux chemins de leurs fichiers
-    members_names = {os.path.basename(elt) : elt for elt in input_path}
-    
-    st.title("Visualisation des données")
-    
-    selection = st.pills("Choisissez des membres du groupe",
-                         list(members_names.keys()),
-                         selection_mode="multi")
-    
-    dfs = []
-    
-    for member in selection:
-        member_path = members_names[member]
-        files = glob.glob(f"{member_path}/*")
-        selected_file = select_random_file(files)
-        dfs.append(pd.read_csv(selected_file))
-    
-    st.plotly_chart(multi_line_graph(dfs,selection))
+    main()
