@@ -22,9 +22,9 @@ def setup() ->  Dict:
     members = {os.path.basename(f) : {"path": f} for f in files}
 
     for member in members:
-        member["records"] = {}
-        for record in glob.glob(f"{member['path']}/*"):
-            member["records"][os.path.basename(record)] = pd.read_csv(record)
+        members[member]["records"] = {}
+        for record in glob.glob(f"{members[member]['path']}/*"):
+            members[member]["records"][os.path.basename(record)] = pd.read_csv(record)
 
     return members
 
