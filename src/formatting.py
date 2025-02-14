@@ -1,8 +1,7 @@
+import os
+import glob
 import pandas as pd
 import numpy as np
-import glob
-import os
-from tqdm import tqdm
 
 
 def norm(df):
@@ -24,16 +23,16 @@ def set_time(df):
 
     for idx, (name, group_df) in enumerate(group):
         group_df["time (s)"] = idx + np.linspace(0, 1, len(group_df)+1)[:-1]
-        
+
         df.update(group_df)
-    
+
     return df
 
 if __name__ == "__main__":
     input_path = glob.glob("../data/input/*")
     # Les noms de chaque membre du groupe, associés aux chemins de leurs fichiers
     members_names = {os.path.basename(elt) : elt for elt in input_path}
-    
+
     for name, path in members_names.items():
         input_files = glob.glob(f"{path}/*")
         print(name)
@@ -48,7 +47,7 @@ if __name__ == "__main__":
             df["acceleration (g)"] = df["acceleration (g)"].astype(float)
             df = trim(df)
             df = set_time(df)
-            output_dir = f"../data/output/{name}"
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            df.to_csv(f"{output_dir}/{os.path.basename(f)}", index=False)
+            OUTPUT_DIR = f"../data/output/{name}"
+            if not os.path.exists(OUTPUT_DIR):
+                os.makedirs(OUTPUT_DIR)
+            df.to_csv(f"{OUTPUT_DIR}/{os.path.basename(f)}", index=False)

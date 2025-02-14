@@ -1,26 +1,41 @@
-import streamlit as st
-import pandas as pd
+"""
+Module main de l'application Streamlit
+Pour le lancer : streamlit run main.py
+"""
 import glob
 import os
+from typing import Dict
+import streamlit as st
+import pandas as pd
 from src.plots import MovementData
 
-def setup():
+def setup() ->  Dict:
+    """
+    Fonction de setup de l'application
+    Permet de récupérer les données des membres du groupe
+
+    Returns:
+        Dict: Dictionnaire contenant les données des membres
+    """
     file_path = 'data/output'
     files = glob.glob(f"{file_path}/*")
     members = {os.path.basename(f) : {"path": f} for f in files}
-    
-    for name, member in members.items():
+
+    for member in members:
         member["records"] = {}
         for record in glob.glob(f"{member['path']}/*"):
             member["records"][os.path.basename(record)] = pd.read_csv(record)
-    
-    return members
-       
 
-def main():
+    return members
+
+
+def main() -> None:
+    """
+    Fonction principale de l'application
+    """
     members = setup()
     members_names = list(members.keys())
-    
+
     st.title("Analyse des démarches des membres du groupe r7")
     with st.sidebar:
         dfs = []
@@ -40,7 +55,7 @@ def main():
                 names.append(name)
         movement_data = MovementData(dfs,names)
         plot_dict = movement_data.make_all_plots()
-    
+
     with st.container():
         if not plot_dict:
             st.write("### Veuillez sélectionner des fichiers à analyser")
