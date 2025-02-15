@@ -18,6 +18,14 @@ On distingue d'ores et déjà des caractéristiques dans l'amplitude et la fréq
 
 A terme, nous aimerions pouvoir également visualiser les données provenant de la montre empatica.
 
+## Clonage
+
+Pour cloner le projet, il suffit de lancer la commande suivante :
+
+```bash
+git clone https://github.com/appollo30/r7-visualization.git
+
+
 ## Utilisation
 
 ### Sans Docker
