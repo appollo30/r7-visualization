@@ -66,7 +66,8 @@ def main() -> None:
                 selection_mode="single",
                 default="Line"
             )
-            st.plotly_chart(plot_dict[segmented_control])
+            if segmented_control:
+                st.plotly_chart(plot_dict[segmented_control])
 
 if __name__ == '__main__':
     main()
