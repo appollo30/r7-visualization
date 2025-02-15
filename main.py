@@ -35,7 +35,7 @@ def main() -> None:
     """
     members = setup()
     members_names = list(members.keys())
-
+    st.set_page_config(layout="wide")
     st.title("Analyse des démarches des membres du groupe r7")
     with st.sidebar:
         dfs = []
@@ -67,7 +67,7 @@ def main() -> None:
                 default="Line"
             )
             if segmented_control:
-                st.plotly_chart(plot_dict[segmented_control])
+                st.plotly_chart(plot_dict[segmented_control], theme=None)
 
 if __name__ == '__main__':
     main()
