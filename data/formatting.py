@@ -72,6 +72,16 @@ class DataFormatting:
         else:
             return "us"
     
+    def reinterpolate(self):
+        """
+        Réinterpoler les données pour avoir une fréquence de 100Hz
+        """
+        self.df['time (timedelta)'] = pd.to_timedelta(self.df['time (s)'], unit='s')
+        self.df = self.df.set_index('time (timedelta)')
+        self.df = self.df.resample('10ms').mean()
+        self.df = self.df.interpolate(method='linear')
+        self.df['time (s)'] = self.df.index.total_seconds()
+    
     def process(self):
         """
         Appliquer les transformations sur le dataframe
@@ -90,6 +100,7 @@ class DataFormatting:
         cols = self.df.columns.tolist()
         cols = cols[-1:] + cols[:-1]
         self.df = self.df[cols]
+        self.reinterpolate()
 
 if __name__ == "__main__":
     input_path = glob.glob("./input/*")
