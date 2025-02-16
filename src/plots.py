@@ -27,7 +27,7 @@ class MovementData:
                     line={"color" : self.color_dict[name]}
                     )
                 )
-        fig.update_layout(hovermode="x", title_text="Accélération en fonction du temps")
+        fig.update_layout(hovermode="x unified", title_text="Accélération en fonction du temps")
         fig.update_xaxes(title_text="Time (s)")
         fig.update_yaxes(title_text="Acceleration (g)")
         return fig
@@ -93,7 +93,7 @@ class MovementData:
                 row=3,
                 col=1
                 )
-        fig.update_layout(hovermode="x", title_text="Accélération en X, Y et Z en fonction du temps")
+        fig.update_layout(hovermode="x unified", title_text="Accélération en X, Y et Z en fonction du temps")
         return fig
 
     def stacked_plot(self):

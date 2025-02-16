@@ -13,9 +13,6 @@ class DataFormatting:
     def norm(self):
         """
         Calculer la norme du vecteur d'accélération
-
-        Returns:
-            pd.DataFrame: Le dataframe avec la norme du vecteur d'accélération comme nouvelle colonne
         """
         # Calculer la norme du vecteur d'accélération a = sqrt(x^2 + y^2 + z^2)
         self.df["acceleration (g)"] = np.sqrt(self.df["X (g)"]**2 + self.df["Y (g)"]**2 + self.df["Z (g)"]**2)
@@ -23,9 +20,6 @@ class DataFormatting:
     def trim(self):
         """
         Réduire les données pour supprimer la première et la dernière seconde de l'enregistrement
-
-        Returns:
-            pd.DataFrame: Le dataframe réduit
         """
         first_sec = self.df.iloc[0]["Timestamp"]
         last_sec = self.df.iloc[-1]["Timestamp"]
@@ -37,9 +31,6 @@ class DataFormatting:
     def set_time(self):
         """
         Définir la colonne de temps pour qu'elle soit comptée en secondes depuis le début de l'enregistrement
-
-        Returns:
-            pd.DataFrame: Le dataframe avec la colonne de temps définie
         """
         self.df = self.df.copy()
         self.df['time (s)'] = 0
