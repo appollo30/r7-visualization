@@ -81,8 +81,8 @@ class DataFormatting:
         """
         self.df["Timestamp"] = pd.to_datetime(self.df["Timestamp"])
         self.norm()
-        self.trim()
         if self.get_timestamp_precision() == "s":
+            self.trim()
             self.set_time()
         else:
             self.df['time (s)'] = (self.df["Timestamp"] - self.df["Timestamp"].iloc[0]).dt.total_seconds()
@@ -90,7 +90,6 @@ class DataFormatting:
         cols = self.df.columns.tolist()
         cols = cols[-1:] + cols[:-1]
         self.df = self.df[cols]
-        #self.df = self.df.set_index("time (s)")
 
 if __name__ == "__main__":
     input_path = glob.glob("./input/*")
