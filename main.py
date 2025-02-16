@@ -17,7 +17,7 @@ def setup() ->  Dict:
     Returns:
         Dict: Dictionnaire contenant les données des membres
     """
-    file_path = 'data/output'
+    file_path = 'data/processed'
     files = glob.glob(f"{file_path}/*")
     members = {os.path.basename(f) : {"path": f} for f in files}
 

@@ -94,7 +94,7 @@ class DataFormatting:
         self.reinterpolate()
 
 if __name__ == "__main__":
-    input_path = glob.glob("./input/*")
+    input_path = glob.glob("./raw/*")
     # Les noms de chaque membre du groupe, associés aux chemins de leurs fichiers
     members_names = {os.path.basename(elt): elt for elt in input_path}
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             data = DataFormatting(df)
             data.process()
             df = data.df
-            OUTPUT_DIR = f"./output/{name}"
+            OUTPUT_DIR = f"./processed/{name}"
             if not os.path.exists(OUTPUT_DIR):
                 os.makedirs(OUTPUT_DIR)
             df.to_csv(f"{OUTPUT_DIR}/{os.path.basename(f)}", index=False)
