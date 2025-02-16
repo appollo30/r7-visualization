@@ -32,6 +32,7 @@ class DataFormatting:
 
         # Garder uniquement les données entre la première et la dernière seconde exclues
         self.df = self.df.query("Timestamp > @first_sec & Timestamp < @last_sec")
+        self.df = self.df.reset_index(drop=True)
     
     def set_time(self):
         """
@@ -52,6 +53,25 @@ class DataFormatting:
 
         self.df["time (s)"] = self.df["time (s)"].astype(float)
     
+    def get_timestamp_precision(self):
+        """
+        Obtenir la précision des timestamps
+
+        Returns:
+            float: La précision des timestamps, 
+            "s" si la précision est en secondes,
+            "ms" si la précision est en millisecondes,
+            "us" si la précision est en microsecondes
+        """
+        # Obtenir la différence entre deux timestamps consécutifs
+        date = self.df["Timestamp"][0]
+        if date.microsecond == 0:
+            return "s"
+        elif date.microsecond%1000 == 0:
+            return "ms"
+        else:
+            return "us"
+    
     def process(self):
         """
         Appliquer les transformations sur le dataframe
@@ -62,9 +82,15 @@ class DataFormatting:
         self.df["Timestamp"] = pd.to_datetime(self.df["Timestamp"])
         self.norm()
         self.trim()
-        self.set_time()
+        if self.get_timestamp_precision() == "s":
+            self.set_time()
+        else:
+            self.df['time (s)'] = (self.df["Timestamp"] - self.df["Timestamp"].iloc[0]).dt.total_seconds()
         self.df = self.df.drop(columns=["Timestamp"])
-        self.df = self.df.set_index("time (s)")
+        cols = self.df.columns.tolist()
+        cols = cols[-1:] + cols[:-1]
+        self.df = self.df[cols]
+        #self.df = self.df.set_index("time (s)")
 
 if __name__ == "__main__":
     input_path = glob.glob("./input/*")
@@ -83,4 +109,4 @@ if __name__ == "__main__":
             OUTPUT_DIR = f"./output/{name}"
             if not os.path.exists(OUTPUT_DIR):
                 os.makedirs(OUTPUT_DIR)
-            df.to_csv(f"{OUTPUT_DIR}/{os.path.basename(f)}", index=True)
+            df.to_csv(f"{OUTPUT_DIR}/{os.path.basename(f)}", index=False)
