@@ -7,7 +7,7 @@ import os
 from typing import Dict
 import streamlit as st
 import pandas as pd
-from src.plots import MovementData
+from src.movement_data import MovementData
 
 def setup() ->  Dict:
     """
@@ -35,7 +35,7 @@ def main() -> None:
     """
     members = setup()
     members_names = list(members.keys())
-    st.set_page_config(layout="wide")
+    st.set_page_config(page_title="R7 Visualisation", layout="wide")
     st.title("Analyse des démarches des membres du groupe r7")
     with st.sidebar:
         dfs = []
