@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 class XYZPlot(SinglePlot):
-    def create_plot(self) -> go.Figure:
+    def make_plot(self) -> None:
         fig = make_subplots(
             rows=3,
             cols=1,
@@ -48,4 +48,4 @@ class XYZPlot(SinglePlot):
                 col=1
                 )
         fig.update_layout(hovermode="x unified", title_text="Accélération en X, Y et Z en fonction du temps")
-        return fig
+        self.cache_plot = fig

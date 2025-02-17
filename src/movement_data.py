@@ -20,10 +20,8 @@ class MovementData:
         self.dfs = dfs
         self.names = names
 
-    def make_plot(self,plot_name):
-        if plot_name not in self.plot_classes:
-            raise ValueError(f"Plot {plot_name} not found")
-        self.plot_classes[plot_name](self.dfs,self.names).show()
+    def make_all_plots(self):
+        return {name: plot_class(self.dfs, self.names) for name, plot_class in self.plot_classes.items()}
         
     def get_plot_names(self):
         if len(self.names) == 0:

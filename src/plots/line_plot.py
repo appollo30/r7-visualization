@@ -2,7 +2,7 @@ from src.plots.base_plot import SinglePlot
 import plotly.graph_objects as go
 
 class LinePlot(SinglePlot):
-    def create_plot(self) -> go.Figure:
+    def make_plot(self) -> None:
         fig = go.Figure()
 
         for df,name in zip(self.dfs,self.names):
@@ -17,4 +17,4 @@ class LinePlot(SinglePlot):
         fig.update_layout(hovermode="x unified", title_text="Accélération en fonction du temps")
         fig.update_xaxes(title_text="Time (s)")
         fig.update_yaxes(title_text="Acceleration (g)")
-        return fig
+        self.cache_plot = fig

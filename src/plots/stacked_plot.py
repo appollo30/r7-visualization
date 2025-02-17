@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 class StackedPlot(SinglePlot):
-    def create_plot(self) -> go.Figure:
+    def make_plot(self) -> None:
         n = len(self.names)
 
         fig = make_subplots(rows=n,
@@ -42,4 +42,4 @@ class StackedPlot(SinglePlot):
                 col=2)
         fig.update_layout(hovermode="x", title_text="Accélération en fonction du temps")
 
-        return fig
+        self.cache_plot = fig

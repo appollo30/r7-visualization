@@ -11,14 +11,16 @@ class Plot:
         self.dfs = dfs
         self.names = names
         self.color_dict = dict(zip(self.names, Plot.COLORS))
+        self.cache_plot = None
     
     def show(self):
         raise NotImplementedError("Show method not implemented")
     
 class SinglePlot(Plot):
-    def create_plot(self) -> go.Figure:
+    def make_plot(self) -> None:
         raise NotImplementedError("Create plot method not implemented")
     
-    def show(self):
-        fig = self.create_plot()
-        st.plotly_chart(fig)
+    def show(self) -> None:
+        if self.cache_plot is None:
+            self.make_plot()
+        st.plotly_chart(self.cache_plot)

@@ -2,7 +2,7 @@ from src.plots.base_plot import SinglePlot
 import plotly.graph_objects as go
 
 class ViolinPlot(SinglePlot):
-    def create_plot(self) -> go.Figure:
+    def make_plot(self) -> None:
         fig = go.Figure()
 
         for df,name in zip(self.dfs,self.names):
@@ -17,4 +17,4 @@ class ViolinPlot(SinglePlot):
                 )
         fig.update_yaxes(title_text="Acceleration (g)")
         fig.update_layout(title_text="Distribution de l'accélération")
-        return fig
+        self.cache_plot = fig

@@ -55,6 +55,7 @@ def main() -> None:
                 names.append(name)
         movement_data = MovementData(dfs,names)
         plot_names = movement_data.get_plot_names()
+        plots = movement_data.make_all_plots()
 
     with st.container():
         if not plot_names:
@@ -67,7 +68,7 @@ def main() -> None:
                 default="Line"
             )
             if segmented_control:
-                movement_data.make_plot(segmented_control)
+                plots[segmented_control].show()
 
 if __name__ == '__main__':
     main()
