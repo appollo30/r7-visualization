@@ -1,6 +1,8 @@
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.signal import find_peaks
+from scipy.fft import fft, fftfreq
 
 class MovementData:
     """
