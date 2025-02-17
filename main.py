@@ -54,20 +54,20 @@ def main() -> None:
                 dfs.append(members[name]["records"][select_box])
                 names.append(name)
         movement_data = MovementData(dfs,names)
-        plot_dict = movement_data.make_all_plots()
+        plot_names = movement_data.get_plot_names()
 
     with st.container():
-        if not plot_dict:
+        if not plot_names:
             st.write("### Veuillez sélectionner des fichiers à analyser")
         else:
             segmented_control = st.segmented_control(
                 label="Type de graphe :",
-                options=list(plot_dict.keys()),
+                options=plot_names,
                 selection_mode="single",
                 default="Line"
             )
             if segmented_control:
-                st.plotly_chart(plot_dict[segmented_control], theme=None)
+                movement_data.make_plot(segmented_control)
 
 if __name__ == '__main__':
     main()

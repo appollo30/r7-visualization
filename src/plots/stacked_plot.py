@@ -1,8 +1,8 @@
-from .base_plot import Plot
+from src.plots.base_plot import SinglePlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-class StackedPlot(Plot):
+class StackedPlot(SinglePlot):
     def create_plot(self) -> go.Figure:
         n = len(self.names)
 

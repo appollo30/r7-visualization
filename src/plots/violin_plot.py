@@ -1,7 +1,7 @@
-from .base_plot import Plot
+from src.plots.base_plot import SinglePlot
 import plotly.graph_objects as go
 
-class ViolinPlot(Plot):
+class ViolinPlot(SinglePlot):
     def create_plot(self) -> go.Figure:
         fig = go.Figure()
 
