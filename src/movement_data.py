@@ -2,6 +2,7 @@ from src.plots.line_plot import LinePlot
 from src.plots.violin_plot import ViolinPlot
 from src.plots.stacked_plot import StackedPlot
 from src.plots.xyz_plot import XYZPlot
+from src.plots.frequency_plot import FrequencyPlot
 
 class MovementData:
     """
@@ -11,7 +12,8 @@ class MovementData:
         "Line" : LinePlot,
         "Violin" : ViolinPlot,
         "Stacked" : StackedPlot,
-        "XYZ" : XYZPlot
+        "XYZ" : XYZPlot,
+        "Frequency" : FrequencyPlot
     }
     
     def __init__(self, dfs, names):
