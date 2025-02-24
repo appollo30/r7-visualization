@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from scipy.fft import fft, fftfreq
+from scipy.signal import find_peaks
 import pandas as pd
 import os
 
@@ -10,6 +12,8 @@ class WalkingRecording:
     df : pd.DataFrame
     name : str
     file_name : str | None = None
+    cache_fft = None
+    cache_steps = None
     
     @classmethod
     def from_csv(cls,file_path):
@@ -24,6 +28,21 @@ class WalkingRecording:
     
     def get_sampling_frequency(self) -> float:
         return self.df["time (s)"].diff().mean()
+    
+    def get_fft(self):
+        if self.cache_fft is not None:
+            return self.cache_fft
+        N = len(self.df["time (s)"])
+        T = self.df["time (s)"].iloc[-1] / N
+        yf = fft(self.df["acceleration (g)"])
+        xf = fftfreq(N, T)[:N//2]
+        self.cache_fft = yf[:N//2], xf
+        return self.cache_fft
+    
+    def get_steps(self):
+        if self.cache_steps is not None:
+            return self.cache_peaks
+        return find_peaks(self.df['acceleration (g)'], height=1.1, prominence=0.2,distance=30)[0]
     
     def __str__(self) -> str:
         return f"""WalkingRecording(name = \"{self.name}\",file_name = \"{self.file_name}\")

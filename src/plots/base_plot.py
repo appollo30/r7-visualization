@@ -14,7 +14,7 @@ class Plot:
         raise NotImplementedError("Make plot method not implemented")
     
     def get_plot(self) -> go.Figure:
-        if not self.cache_plot:
+        if self.cache_plot is None:
             self.make_plot()
         return self.cache_plot
     

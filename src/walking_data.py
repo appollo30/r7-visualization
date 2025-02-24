@@ -2,7 +2,7 @@ from src.plots.line_plot import LinePlot
 from src.plots.violin_plot import ViolinPlot
 from src.plots.stacked_plot import StackedPlot
 from src.plots.xyz_plot import XYZPlot
-#from src.plots.frequency_plot import FrequencyPlot
+from src.plots.frequency_plot import FrequencyPlot
 from src.walking_recording import WalkingRecording
 from typing import List, Dict
 
@@ -15,7 +15,7 @@ class WalkingData:
         "Violin" : ViolinPlot,
         "Stacked" : StackedPlot,
         "XYZ" : XYZPlot,
-        #"Frequency" : FrequencyPlot
+        "Frequency" : FrequencyPlot
     }
     
     def __init__(self, walking_recordings : List[WalkingRecording]):
