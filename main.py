@@ -6,7 +6,6 @@ import glob
 import os
 from typing import Dict
 import streamlit as st
-import pandas as pd
 from src.walking_data import WalkingData
 from src.walking_recording import WalkingRecording
 
@@ -21,24 +20,25 @@ def setup() ->  Dict:
     file_path = 'data/processed'
     members_list = glob.glob(f"{file_path}/*")
     members_dict = {}
-    
+
     for member in members_list:
         member_name = os.path.basename(member)
         members_dict[member_name] = {}
         file_list = glob.glob(f"{member}/*")
         for csv_file in file_list:
-            members_dict[member_name][os.path.basename(csv_file)] = WalkingRecording.from_csv(csv_file)
+            basename = os.path.basename(csv_file)
+            members_dict[member_name][basename] = WalkingRecording.from_csv(csv_file)
 
     return members_dict
 
 def handle_sidebar(members : Dict) -> WalkingData:
     members_names = list(members.keys())
-    
+
     with st.sidebar:
         recordings = []
         st.markdown("## Sélectionnez les fichiers à analyser")
         for name in members_names:
-            file_names = (members[name].keys())
+            file_names = members[name].keys()
             select_box = st.selectbox(
                 f"Choisissez un fichier pour {name}", 
                 file_names,
@@ -49,7 +49,7 @@ def handle_sidebar(members : Dict) -> WalkingData:
                 st.write(f"Vous avez choisi {select_box}")
         walking_data = WalkingData(recordings)
     walking_data.make_all_plots()
-    
+
     return walking_data
 
 def handle_plots_and_selectbox(walking_data : WalkingData) -> None:

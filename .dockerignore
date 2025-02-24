@@ -8,3 +8,5 @@ tests.ipynb
 
 data/raw
 data/tests.ipynb
+
+.pylintrc

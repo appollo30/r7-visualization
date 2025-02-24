@@ -9,14 +9,14 @@ class DataFormatting:
     """
     def __init__(self, df: pd.DataFrame):
         self.df = df
-    
+
     def norm(self):
         """
         Calculer la norme du vecteur d'accélération
         """
         # Calculer la norme du vecteur d'accélération a = sqrt(x^2 + y^2 + z^2)
         self.df["acceleration (g)"] = np.sqrt(self.df["X (g)"]**2 + self.df["Y (g)"]**2 + self.df["Z (g)"]**2)
-    
+
     def trim(self):
         """
         Réduire les données pour supprimer la première et la dernière seconde de l'enregistrement
@@ -27,10 +27,11 @@ class DataFormatting:
         # Garder uniquement les données entre la première et la dernière seconde exclues
         self.df = self.df.query("Timestamp > @first_sec & Timestamp < @last_sec")
         self.df = self.df.reset_index(drop=True)
-    
+
     def set_time(self):
         """
-        Définir la colonne de temps pour qu'elle soit comptée en secondes depuis le début de l'enregistrement
+        Définir la colonne de temps pour qu'elle soit comptée en secondes depuis le début 
+        de l'enregistrement
         """
         self.df = self.df.copy()
         self.df['time (s)'] = 0
@@ -43,7 +44,7 @@ class DataFormatting:
             self.df.update(group_df)
 
         self.df["time (s)"] = self.df["time (s)"].astype(float)
-    
+
     def get_timestamp_precision(self):
         """
         Obtenir la précision des timestamps
@@ -62,7 +63,7 @@ class DataFormatting:
             return "ms"
         else:
             return "us"
-    
+
     def reinterpolate(self):
         """
         Réinterpoler les données pour avoir une fréquence de 100Hz
@@ -72,7 +73,7 @@ class DataFormatting:
         self.df = self.df.resample('10ms').mean()
         self.df = self.df.interpolate(method='linear')
         self.df['time (s)'] = self.df.index.total_seconds()
-    
+
     def process(self):
         """
         Appliquer les transformations sur le dataframe
