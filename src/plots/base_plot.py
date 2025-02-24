@@ -26,7 +26,7 @@ class SingleRecordingPlot(Plot):
     def __init__(self, walking_recording : WalkingRecording):
         super().__init__()
         self.walking_recording = walking_recording
-        self.color_dict = Plot.COLORS
+        
     
 class MultipleRecordingPlot(Plot):
     def __init__(self, walking_recordings : List[WalkingRecording]):
