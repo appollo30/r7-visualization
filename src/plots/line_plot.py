@@ -1,17 +1,19 @@
-from src.plots.base_plot import SinglePlot
+from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 
-class LinePlot(SinglePlot):
+class LinePlot(MultipleRecordingPlot):
     def make_plot(self) -> None:
         fig = go.Figure()
 
-        for df,name in zip(self.dfs,self.names):
+        for walking_recording in self.walking_recordings:
+            name = walking_recording.name
+            df = walking_recording.df
             fig.add_trace(
                 go.Scatter(
                     x=df["time (s)"],
                     y=df["acceleration (g)"],
                     name=name,
-                    line={"color" : self.color_dict[name]}
+                    line={"color" : self.color_scheme[name]}
                     )
                 )
         fig.update_layout(hovermode="x unified", title_text="Accélération en fonction du temps")

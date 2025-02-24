@@ -1,10 +1,10 @@
-from src.plots.base_plot import SinglePlot
+from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-class StackedPlot(SinglePlot):
+class StackedPlot(MultipleRecordingPlot):
     def make_plot(self) -> None:
-        n = len(self.names)
+        n = len(self.walking_recordings)
 
         fig = make_subplots(rows=n,
                             cols=2,
@@ -15,14 +15,16 @@ class StackedPlot(SinglePlot):
                             y_title="Acceleration (g)",
                 )
 
-        for i, (df,name) in enumerate(zip(self.dfs,self.names)):
+        for i, walking_recording in enumerate(self.walking_recordings):
+            name = walking_recording.name
+            df = walking_recording.df
             fig.add_trace(
                 go.Scatter(
                     x=df["time (s)"],
                     y=df["acceleration (g)"],
                     mode='lines',
                     name=name,
-                    line={"color" : self.color_dict[name]},
+                    line={"color" : self.color_scheme[name]},
                     legendgroup=name
                     ),
                 row=i+1,
@@ -34,7 +36,7 @@ class StackedPlot(SinglePlot):
                     name=name,
                     box_visible=True,
                     meanline_visible=True,
-                    line={"color" : self.color_dict[name]},
+                    line={"color" : self.color_scheme[name]},
                     legendgroup=name,
                     showlegend=False,
                     ),

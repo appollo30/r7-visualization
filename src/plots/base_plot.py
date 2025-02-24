@@ -1,26 +1,35 @@
-import pandas as pd
-import plotly.graph_objects as go
 import plotly.express as px
-from typing import List
+import plotly.graph_objects as go
 import streamlit as st
+from typing import List
+from src.walking_recording import WalkingRecording
 
 class Plot:
     COLORS = px.colors.qualitative.Plotly
     
-    def __init__(self, dfs: List[pd.DataFrame], names: List[str]):
-        self.dfs = dfs
-        self.names = names
-        self.color_dict = dict(zip(self.names, Plot.COLORS))
+    def __init__(self):
         self.cache_plot = None
     
-    def show(self):
-        raise NotImplementedError("Show method not implemented")
-    
-class SinglePlot(Plot):
     def make_plot(self) -> None:
-        raise NotImplementedError("Create plot method not implemented")
+        raise NotImplementedError("Make plot method not implemented")
     
-    def show(self) -> None:
-        if self.cache_plot is None:
+    def get_plot(self) -> go.Figure:
+        if not self.cache_plot:
             self.make_plot()
+        return self.cache_plot
+    
+    def show(self):
+        cache_plot = self.get_plot()
         st.plotly_chart(self.cache_plot)
+    
+class SingleRecordingPlot(Plot):
+    def __init__(self, walking_recording : WalkingRecording):
+        super().__init__()
+        self.walking_recording = walking_recording
+        self.color_dict = Plot.COLORS
+    
+class MultipleRecordingPlot(Plot):
+    def __init__(self, walking_recordings : List[WalkingRecording]):
+        super().__init__()
+        self.walking_recordings = walking_recordings
+        self.color_scheme = {walking_recording.name : color for walking_recording, color in zip(self.walking_recordings, Plot.COLORS)}

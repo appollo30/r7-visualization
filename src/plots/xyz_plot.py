@@ -1,8 +1,8 @@
-from src.plots.base_plot import SinglePlot
+from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-class XYZPlot(SinglePlot):
+class XYZPlot(MultipleRecordingPlot):
     def make_plot(self) -> None:
         fig = make_subplots(
             rows=3,
@@ -13,14 +13,16 @@ class XYZPlot(SinglePlot):
             y_title="Acceleration (g)"
             )
 
-        for df,name in zip(self.dfs,self.names):
+        for walking_recording in self.walking_recordings:
+            name = walking_recording.name
+            df = walking_recording.df
             fig.add_trace(
                 go.Scatter(x=df["time (s)"],
                         y=df["X (g)"],
                         mode='lines',
                         name=name,
                         legendgroup=name,
-                        line={"color" : self.color_dict[name]}
+                        line={"color" : self.color_scheme[name]}
                         ),
                 row=1,
                 col=1)
@@ -30,7 +32,7 @@ class XYZPlot(SinglePlot):
                         mode='lines',
                         name=name,
                         legendgroup=name,
-                        line={"color" : self.color_dict[name]},
+                        line={"color" : self.color_scheme[name]},
                         showlegend=False
                         ),
                 row=2, col=1)
@@ -41,7 +43,7 @@ class XYZPlot(SinglePlot):
                     mode='lines',
                     name=name,
                     legendgroup=name,
-                    line={"color" : self.color_dict[name]},
+                    line={"color" : self.color_scheme[name]},
                     showlegend=False
                     ),
                 row=3,
