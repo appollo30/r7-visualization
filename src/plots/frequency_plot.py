@@ -52,34 +52,19 @@ class FrequencyPlot(MultipleRecordingPlot):
                 row=i+1,
                 col=1,
             )
-            if i == 0: 
-                fig.add_trace(
-                    go.Scatter(
-                        x=df['time (s)'][steps],
-                        y=df['acceleration (g)'][steps],
-                        mode='markers',
-                        name='Pas détéctés',
-                        line={"color" : "#D62728"},
-                        legendgroup="Pas détéctés",
-                        showlegend=True
-                    ),
-                    row=i+1,
-                    col=1,
-                )
-            else:
-                fig.add_trace(
-                    go.Scatter(
-                        x=df['time (s)'][steps],
-                        y=df['acceleration (g)'][steps],
-                        mode='markers',
-                        name='Pas détéctés',
-                        line={"color" : "#D62728"},
-                        legendgroup='Pas détéctés',
-                        showlegend=False
-                    ),
-                    row=i+1,
-                    col=1,
-                )
+            fig.add_trace(
+                go.Scatter(
+                    x=df['time (s)'][steps],
+                    y=df['acceleration (g)'][steps],
+                    mode='markers',
+                    name='Pas détéctés',
+                    line={"color" : "#FD3216"},
+                    legendgroup="Pas détéctés",
+                    showlegend=(i==0)
+                ),
+                row=i+1,
+                col=1,
+            )
         fig.update_layout(
             title='Détection des pas',
             xaxis_title='Temps (s)',
@@ -121,7 +106,10 @@ class FrequencyPlot(MultipleRecordingPlot):
                 col=2
             )
             
-                
+        fig.update_layout(
+            title="Analyse de la fréquence des pas",
+        )
+         
         self.cache_plot = fig
     
     
