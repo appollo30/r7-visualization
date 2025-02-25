@@ -30,7 +30,7 @@ class FrequencyPlot(MultipleRecordingPlot):
             yaxis_title='Amplitude (g)',
             hovermode = "x"
         )
-        fig.update_xaxes(range=[0, 3])
+        fig.update_xaxes(range=[0, 7])
         return fig
 
     def steps_plot(self):
@@ -121,7 +121,7 @@ class FrequencyPlot(MultipleRecordingPlot):
                 col=1
             )
             fig.update_xaxes(
-                range=[0, 3],
+                range=[0, 7],
                 row=i+1,
                 col=2
             )

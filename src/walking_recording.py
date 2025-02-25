@@ -49,7 +49,7 @@ class WalkingRecording:
     def get_frequency_from_fft(self) -> float:
         X, freqs = self.get_fft()
         N = len(X)
-        return freqs[1:N//2][np.argmax(X[1:N//2])]
+        return freqs[1:N//2][np.argmax(np.abs(X[1:N//2]))]
     
     def get_frequency_from_counting_steps(self) -> float:
         steps = self.get_steps()
