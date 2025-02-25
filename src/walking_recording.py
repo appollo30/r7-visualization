@@ -3,6 +3,7 @@ from scipy.fft import fft, fftfreq
 from scipy.signal import find_peaks
 import pandas as pd
 import os
+import numpy as np
 
 @dataclass
 class WalkingRecording:
@@ -39,10 +40,24 @@ class WalkingRecording:
         self.cache_fft = yf[:N//2], xf
         return self.cache_fft
     
-    def get_steps(self):
+    def get_steps(self) -> np.ndarray:
         if self.cache_steps is not None:
-            return self.cache_peaks
-        return find_peaks(self.df['acceleration (g)'], height=1.1, prominence=0.2,distance=30)[0]
+            return self.cache_steps
+        self.cache_steps = find_peaks(self.df['acceleration (g)'], height=1.1, prominence=0.2,distance=30)[0]
+        return self.cache_steps
+    
+    def get_frequency_from_fft(self) -> float:
+        X, freqs = self.get_fft()
+        N = len(X)
+        return freqs[1:N//2][np.argmax(X[1:N//2])]
+    
+    def get_frequency_from_counting_steps(self) -> float:
+        steps = self.get_steps()
+        period = self.df["time (s)"].iloc[steps].diff().mean()
+        return 1/period
+        
+    def get_std(self,field):
+        return self.df[field].std()
     
     def __str__(self) -> str:
         return f"""WalkingRecording(name = \"{self.name}\",file_name = \"{self.file_name}\")

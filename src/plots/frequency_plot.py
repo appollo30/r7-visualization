@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import streamlit as st
+import pandas as pd
 
 class FrequencyPlot(MultipleRecordingPlot):
     def fft_plot(self):
@@ -72,6 +73,25 @@ class FrequencyPlot(MultipleRecordingPlot):
         )
         return fig
         
+    def get_metrics_df(self):
+        metrics = []
+        for walking_recording in self.walking_recordings:
+            name = walking_recording.name
+            steps = walking_recording.get_steps()
+            metrics.append(
+                {
+                    "Nom": f"**{name}**",
+                    "Longueur de l'enregistrement (s)": walking_recording.get_recording_length(),
+                    "Nombre de pas": len(steps),
+                    "Fréquence des pas par fft (Hz)": walking_recording.get_frequency_from_fft(),
+                    "Fréquence des pas par comptage (Hz)": walking_recording.get_frequency_from_counting_steps(),
+                    "Ecart-type de l'accélération (g)": walking_recording.get_std("acceleration (g)")
+                }
+            )
+        metrics_df = pd.DataFrame(metrics)
+        metrics_df["Longueur de l'enregistrement (s)"] = metrics_df["Longueur de l'enregistrement (s)"].round(2)
+        return metrics_df
+
     def make_plot(self):
         n = len(self.walking_recordings)
         fig = make_subplots(
@@ -112,4 +132,7 @@ class FrequencyPlot(MultipleRecordingPlot):
          
         self.cache_plot = fig
     
-    
+    def show(self):
+        self.cache_plot = self.get_plot()
+        st.table(self.get_metrics_df())
+        st.plotly_chart(self.cache_plot)

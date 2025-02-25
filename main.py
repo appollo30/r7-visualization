@@ -9,6 +9,7 @@ import streamlit as st
 from src.walking_data import WalkingData
 from src.walking_recording import WalkingRecording
 
+@st.cache_data
 def setup() ->  Dict:
     """
     Fonction de setup de l'application
@@ -68,8 +69,8 @@ def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
                 walking_data.cache_plots[segmented_control].show()
 
 def main():
-    members = setup()
     st.set_page_config(page_title="R7 Visualisation", layout="wide")
+    members = setup()
     st.title("Analyse des démarches des membres du groupe R7")
     walking_data = handle_sidebar(members)
     handle_plots_and_selectbox(walking_data)
