@@ -39,7 +39,7 @@ pip install -r requirements.txt
 Ensuite, pour lancer l'application, il suffit de lancer la commande suivante :
 
 ```bash
-streamlit run src/main.py
+streamlit run _👋_Accueil.py
 ```
 
 Vous devriez voir apparaître un lien dans votre terminal qui vous permettra d'accéder à l'application web, ou sinon allez dans votre navigateur et tapez l'adresse suivante : ```http://localhost:8501```

@@ -1,7 +1,3 @@
-"""
-Module main de l'application Streamlit
-Pour le lancer : streamlit run main.py
-"""
 import glob
 import os
 from typing import List
@@ -45,12 +41,11 @@ def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
                 walking_data.cache_plots[segmented_control].show()
 
 def main():
-    st.set_page_config(page_title="R7 Visualisation", layout="wide")
+    st.set_page_config(page_title="Visualisation", page_icon="📈", layout="wide")
+    st.title("Visualisation des données de démarche")
     all_files = get_all_files()
     walking_data = handle_multiselect(all_files)
     walking_data.make_all_plots()
     handle_plots_and_selectbox(walking_data)
-    
 
-if __name__ == '__main__':
-    main()
+main()
