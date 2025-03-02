@@ -4,53 +4,29 @@ Pour le lancer : streamlit run main.py
 """
 import glob
 import os
-from typing import Dict
+from typing import List
 import streamlit as st
 from src.walking_data import WalkingData
 from src.walking_recording import WalkingRecording
+import random
 
 @st.cache_data
-def setup() ->  Dict:
-    """
-    Fonction de setup de l'application
-    Permet de récupérer les données des membres du groupe
-
-    Returns:
-        Dict: Dictionnaire contenant les données des membres
-    """
-    file_path = 'data/processed'
-    members_list = glob.glob(f"{file_path}/*")
-    members_dict = {}
-
-    for member in members_list:
-        member_name = os.path.basename(member)
-        members_dict[member_name] = {}
-        file_list = glob.glob(f"{member}/*")
-        for csv_file in file_list:
-            basename = os.path.basename(csv_file)
-            members_dict[member_name][basename] = WalkingRecording.from_csv(csv_file)
-
-    return members_dict
-
-def handle_sidebar(members : Dict) -> WalkingData:
-    members_names = list(members.keys())
-
-    with st.sidebar:
-        recordings = []
-        st.markdown("## Sélectionnez les fichiers à analyser")
-        for name in members_names:
-            file_names = members[name].keys()
-            select_box = st.selectbox(
-                f"Choisissez un fichier pour {name}", 
-                file_names,
-                index=None
-            )
-            if select_box:
-                recordings.append(members[name][select_box])
-                st.write(f"Vous avez choisi {select_box}")
-        walking_data = WalkingData(recordings)
-    walking_data.make_all_plots()
-
+def get_all_files() -> List[str]:
+    random.seed(42)
+    all_files = glob.glob("data/processed/*/*")
+    all_files_no_prefix = [os.path.relpath(f, "data/processed") for f in all_files]
+    random.shuffle(all_files_no_prefix)
+    return all_files_no_prefix
+    
+def handle_multiselect(all_files : List[str]) -> List[WalkingRecording]:
+    multiselect = st.multiselect(
+        "Choisissez les fichiers à analyser",
+        all_files,
+        default=None,
+        max_selections=6
+    )
+    recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in multiselect]
+    walking_data = WalkingData(recordings)
     return walking_data
 
 def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
@@ -70,10 +46,11 @@ def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
 
 def main():
     st.set_page_config(page_title="R7 Visualisation", layout="wide")
-    members = setup()
-    st.title("Analyse des démarches des membres du groupe R7")
-    walking_data = handle_sidebar(members)
+    all_files = get_all_files()
+    walking_data = handle_multiselect(all_files)
+    walking_data.make_all_plots()
     handle_plots_and_selectbox(walking_data)
+    
 
 if __name__ == '__main__':
     main()
