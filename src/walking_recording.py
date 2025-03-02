@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from scipy.fft import fft, fftfreq
 from scipy.signal import find_peaks
+from scipy.signal import correlate
 import pandas as pd
 import os
 import numpy as np
+import streamlit as st
 
 @dataclass
 class WalkingRecording:
@@ -15,8 +17,10 @@ class WalkingRecording:
     file_name : str | None = None
     cache_fft = None
     cache_steps = None
+    identifier = None
     
     @classmethod
+    @st.cache_resource
     def from_csv(cls,file_path):
         return cls(
             pd.read_csv(file_path),
@@ -27,7 +31,7 @@ class WalkingRecording:
     def get_recording_length(self) -> float:
         return self.df["time (s)"].iloc[-1] - self.df["time (s)"].iloc[0]
     
-    def get_sampling_frequency(self) -> float:
+    def get_sampling_period(self) -> float:
         return self.df["time (s)"].diff().mean()
     
     def get_fft(self):
@@ -45,6 +49,10 @@ class WalkingRecording:
             return self.cache_steps
         self.cache_steps = find_peaks(self.df['acceleration (g)'], height=1.1, prominence=0.2,distance=30)[0]
         return self.cache_steps
+    
+    def get_autocorrelation(self):
+        X_normalized = (self.df['acceleration (g)'] - self.df['acceleration (g)'].mean()) / self.df['acceleration (g)'].std()
+        return correlate(X_normalized, X_normalized[::-1], mode='full')
     
     def get_frequency_from_fft(self) -> float:
         X, freqs = self.get_fft()

@@ -32,4 +32,11 @@ class MultipleRecordingPlot(Plot):
     def __init__(self, walking_recordings : List[WalkingRecording]):
         super().__init__()
         self.walking_recordings = walking_recordings
-        self.color_scheme = {walking_recording.name : color for walking_recording, color in zip(self.walking_recordings, Plot.COLORS)}
+        names = [walking_recording.name for walking_recording in walking_recordings]
+        names_counter = {name : names.count(name) for name in names}
+        for walking_recording in walking_recordings:
+            if names_counter[walking_recording.name] > 1:
+                walking_recording.identifier = f"{walking_recording.name} ({walking_recording.file_name})"
+            else:
+                walking_recording.identifier = walking_recording.name
+        self.color_scheme = {walking_recording.identifier : color for walking_recording, color in zip(self.walking_recordings, Plot.COLORS)}

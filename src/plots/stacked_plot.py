@@ -16,7 +16,7 @@ class StackedPlot(MultipleRecordingPlot):
                 )
 
         for i, walking_recording in enumerate(self.walking_recordings):
-            name = walking_recording.name
+            name = walking_recording.identifier
             df = walking_recording.df
             fig.add_trace(
                 go.Scatter(

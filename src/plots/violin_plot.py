@@ -6,7 +6,7 @@ class ViolinPlot(MultipleRecordingPlot):
         fig = go.Figure()
 
         for walking_recording in self.walking_recordings:
-            name = walking_recording.name
+            name = walking_recording.identifier
             df = walking_recording.df
             fig.add_trace(
                 go.Violin(

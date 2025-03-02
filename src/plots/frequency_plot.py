@@ -10,7 +10,7 @@ class FrequencyPlot(MultipleRecordingPlot):
         n = len(self.walking_recordings)
         fig = make_subplots(rows=n,cols=1)
         for i, walking_recording in enumerate(self.walking_recordings):
-            name = walking_recording.name
+            name = walking_recording.identifier
             fft, freq = walking_recording.get_fft()
             fig.add_trace(
                 go.Scatter(
@@ -37,7 +37,7 @@ class FrequencyPlot(MultipleRecordingPlot):
         n = len(self.walking_recordings)
         fig = make_subplots(rows=n,cols=1)
         for i, walking_recording in enumerate(self.walking_recordings):
-            name = walking_recording.name
+            name = walking_recording.identifier
             df = walking_recording.df
             steps = walking_recording.get_steps()
             fig.add_trace(
@@ -76,7 +76,7 @@ class FrequencyPlot(MultipleRecordingPlot):
     def get_metrics_df(self):
         metrics = []
         for walking_recording in self.walking_recordings:
-            name = walking_recording.name
+            name = walking_recording.identifier
             steps = walking_recording.get_steps()
             metrics.append(
                 {
