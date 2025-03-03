@@ -80,12 +80,13 @@ class FrequencyPlot(MultipleRecordingPlot):
             steps = walking_recording.get_steps()
             metrics.append(
                 {
-                    "Nom": f"**{name}**",
+                    "Nom": name,
                     "Longueur de l'enregistrement (s)": walking_recording.get_recording_length(),
                     "Nombre de pas": len(steps),
                     "Fréquence des pas par fft (Hz)": walking_recording.get_frequency_from_fft(),
                     "Fréquence des pas par comptage (Hz)": walking_recording.get_frequency_from_counting_steps(),
-                    "Ecart-type de l'accélération (g)": walking_recording.get_std("acceleration (g)")
+                    "Ecart-type de la durée des pas (s)" : walking_recording.get_step_duration_std(),
+                    "Amplitude de l'accélération (g)": walking_recording.get_acceleration_amplitude(),
                 }
             )
         metrics_df = pd.DataFrame(metrics)

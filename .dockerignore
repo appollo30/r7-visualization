@@ -10,3 +10,5 @@ data/raw
 data/tests.ipynb
 
 .pylintrc
+
+tests

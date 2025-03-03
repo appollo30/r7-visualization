@@ -5,7 +5,7 @@ from scipy.signal import correlate
 import pandas as pd
 import os
 import numpy as np
-import streamlit as st
+#import streamlit as st
 
 @dataclass
 class WalkingRecording:
@@ -20,7 +20,7 @@ class WalkingRecording:
     identifier = None
     
     @classmethod
-    @st.cache_resource
+    #@st.cache_data
     def from_csv(cls,file_path):
         return cls(
             pd.read_csv(file_path),
@@ -64,6 +64,14 @@ class WalkingRecording:
         period = self.df["time (s)"].iloc[steps].diff().mean()
         return 1/period
         
+    def get_step_duration_std(self) -> float:
+        steps = self.get_steps()
+        duration = self.df["time (s)"].iloc[steps].diff()
+        return duration.std()
+    
+    def get_acceleration_amplitude(self) -> float:
+        return self.df["acceleration (g)"].max() - self.df["acceleration (g)"].min()
+    
     def get_std(self,field):
         return self.df[field].std()
     
