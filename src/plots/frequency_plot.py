@@ -73,14 +73,19 @@ class FrequencyPlot(MultipleRecordingPlot):
         )
         return fig
         
-    def get_metrics_df(self):
+    def get_metrics_df(self,needs_identifier=True):
         metrics = []
         for walking_recording in self.walking_recordings:
-            name = walking_recording.identifier
+            if needs_identifier:
+                name = walking_recording.identifier
+            else:
+                name = walking_recording.name
             steps = walking_recording.get_steps()
+            file_name = walking_recording.file_name
             metrics.append(
                 {
                     "Nom": name,
+                    "Fichier source": file_name,
                     "Longueur de l'enregistrement (s)": walking_recording.get_recording_length(),
                     "Nombre de pas": len(steps),
                     "Fréquence des pas par fft (Hz)": walking_recording.get_frequency_from_fft(),
@@ -135,5 +140,5 @@ class FrequencyPlot(MultipleRecordingPlot):
     
     def show(self):
         self.cache_plot = self.get_plot()
-        st.table(self.get_metrics_df())
+        st.table(self.get_metrics_df(needs_identifier=True))
         st.plotly_chart(self.cache_plot)

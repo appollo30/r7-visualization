@@ -2,26 +2,15 @@ import pandas as pd
 import streamlit as st
 from src.utils import get_all_files
 from src.walking_recording import WalkingRecording
+from src.plots.frequency_plot import FrequencyPlot
 import plotly.express as px
 
 @st.cache_data
 def get_metrics_df():
     files = get_all_files()
     recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in files]
-    metrics = []
-    for recording in recordings:
-        metrics.append(
-            {
-                "Nom": recording.name,
-                "Fichier source": recording.file_name,
-                "Longueur de l'enregistrement (s)": recording.get_recording_length(),
-                "Nombre de pas": len(recording.get_steps()),
-                "Fréquence des pas par fft (Hz)": recording.get_frequency_from_fft(),
-                "Fréquence des pas par comptage (Hz)": recording.get_frequency_from_counting_steps(),
-                "Amplitude de l'accélération (g)": recording.get_acceleration_amplitude(),
-                "Ecart-type de la durée des pas (s)" : recording.get_step_duration_std(),
-            }
-        )
+    freq_plot = FrequencyPlot(recordings)
+    metrics = freq_plot.get_metrics_df(needs_identifier=False)
     return pd.DataFrame(metrics)
 
 def make_scatter(df, x, y):
@@ -70,5 +59,6 @@ def main():
                 discriminantes dans la reconnaissance de la démarche.
     """)
     handle_scatterplots(metrics_df)
+    metrics_df.to_csv("data/metrics.csv",index=False)
     
 main()
