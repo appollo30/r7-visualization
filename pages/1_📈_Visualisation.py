@@ -9,6 +9,7 @@ def handle_multiselect(all_files : List[str]) -> List[WalkingRecording]:
         "Choisissez les fichiers à analyser",
         all_files,
         default=None,
+        placeholder="Veuillez sélectionner des fichiers à analyser",
         max_selections=6
     )
     recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in multiselect]
@@ -18,9 +19,7 @@ def handle_multiselect(all_files : List[str]) -> List[WalkingRecording]:
 def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
     plot_names = walking_data.get_plot_names()
     with st.container():
-        if walking_data.is_empty():
-            st.write("### Veuillez sélectionner des fichiers à analyser")
-        else:
+        if not walking_data.is_empty():
             segmented_control = st.segmented_control(
                 label="Type de graphe :",
                 options=plot_names,

@@ -59,6 +59,14 @@ def main():
                 discriminantes dans la reconnaissance de la démarche.
     """)
     handle_scatterplots(metrics_df)
-    metrics_df.to_csv("data/metrics.csv",index=False)
+    st.markdown("""
+                ## Modélisation
+                
+                ### Premier modèle : SVM
+                
+                Pour commencer, nous allons utiliser un modèle de SVM pour classifier les enregistrements
+                de démarche. Nous allons utiliser les features extraites précédemment pour entraîner le modèle.
+                """)
+    
     
 main()
