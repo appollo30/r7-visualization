@@ -8,6 +8,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+ENV PORT=8501
+
 EXPOSE 8501
 
 CMD ["streamlit", "run", "_👋_Accueil.py"]

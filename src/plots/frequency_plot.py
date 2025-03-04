@@ -6,7 +6,7 @@ import streamlit as st
 import pandas as pd
 
 class FrequencyPlot(MultipleRecordingPlot):
-    def fft_plot(self):
+    def stacked_fft_plot(self):
         n = len(self.walking_recordings)
         fig = make_subplots(rows=n,cols=1)
         for i, walking_recording in enumerate(self.walking_recordings):
@@ -24,6 +24,31 @@ class FrequencyPlot(MultipleRecordingPlot):
                 row=i+1,
                 col=1,
                 )
+        fig.update_layout(
+            title='Transformée de Fourier',
+            xaxis_title='Fréquence (Hz)',
+            yaxis_title='Amplitude (g)',
+            hovermode = "x"
+        )
+        fig.update_xaxes(range=[0, 3])
+        return fig
+
+    def superimposed_fft_plot(self):
+        fig = go.Figure()
+        for walking_recording in self.walking_recordings:
+            name = walking_recording.identifier
+            fft, freq = walking_recording.get_fft()
+            fig.add_trace(
+                go.Scatter(
+                    x=freq,
+                    y=2.0/len(self.walking_recordings) * np.abs(fft),
+                    mode='lines',
+                    name=name,
+                    line={"color" : self.color_scheme[name]},
+                    legendgroup=name,
+                    showlegend=False
+                )
+            )
         fig.update_layout(
             title='Transformée de Fourier',
             xaxis_title='Fréquence (Hz)',
@@ -100,40 +125,38 @@ class FrequencyPlot(MultipleRecordingPlot):
 
     def make_plot(self):
         n = len(self.walking_recordings)
+        specs = [[{"type": "scatter"},{"type": "scatter"}]] * n
+        specs.append([{"type": "scatter","colspan": 2}, None])
+        heights = [1]*n + [2]
+        titles = [""]*2*n + ["Superposition des transformées de Fourier"]
         fig = make_subplots(
-            rows=n,
+            rows=n+1,
             cols=2,
             column_titles=["Détection des pas","Transformée de Fourier"],
             row_titles=[walking_recording.name for walking_recording in self.walking_recordings],
             shared_xaxes=True,
             column_widths=[0.7,0.3],
-            )
+            row_heights=heights,
+            specs=specs,
+            subplot_titles=titles,
+            vertical_spacing=0.05,
+        )
         steps = self.steps_plot()
-        fft = self.fft_plot()
+        stacked_fft = self.stacked_fft_plot()
+        superimposed_fft = self.superimposed_fft_plot()
         
         for i, walking_recording in enumerate(self.walking_recordings):
-            fig.add_trace(steps.data[2*i]
-                ,row=i+1,col=1
-            )
-            fig.add_trace(steps.data[2*i+1]
-                ,row=i+1,col=1
-            )
-            fig.add_trace(fft.data[i]
-                ,row=i+1,col=2
-            )
-            fig.update_yaxes(
-                range=[0.2, 1.8],
-                row=i+1,
-                col=1
-            )
-            fig.update_xaxes(
-                range=[0, 3],
-                row=i+1,
-                col=2
-            )
+            fig.add_trace(steps.data[2*i], row=i+1, col=1)
+            fig.add_trace(steps.data[2*i+1], row=i+1, col=1)
+            fig.add_trace(stacked_fft.data[i], row=i+1, col=2)
+            fig.update_yaxes(range=[0.2, 1.8], row=i+1, col=1)
+            fig.update_xaxes(range=[0, 3], row=i+1, col=2)
+            fig.add_trace(superimposed_fft.data[i], row=n+1, col=1)
+            fig.update_xaxes(range=[0, 3], row=n+1, col=1)
             
         fig.update_layout(
             title="Analyse de la fréquence des pas",
+            height=n*200 + 400,
         )
          
         self.cache_plot = fig
