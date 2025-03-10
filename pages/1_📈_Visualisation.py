@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Dict, Optional
 import streamlit as st
-from src.walking_data import WalkingData
+from src.plot_factory import PlotFactory
 from src.walking_recording import WalkingRecording
 from src.utils import get_all_files 
+import plotly.graph_objects as go
    
-def handle_multiselect(all_files : List[str]) -> List[WalkingRecording]:
+def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
     multiselect = st.multiselect(
         "Choisissez les fichiers à analyser",
         all_files,
@@ -12,29 +13,32 @@ def handle_multiselect(all_files : List[str]) -> List[WalkingRecording]:
         placeholder="Veuillez sélectionner des fichiers à analyser",
         max_selections=6
     )
+    if len(multiselect) == 0:
+        return None
     recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in multiselect]
-    walking_data = WalkingData(recordings)
-    return walking_data
+    plot_factory = PlotFactory(recordings)
+    plot_dict = plot_factory.get_all_plots()
+    return plot_dict
 
-def handle_plots_and_selectbox(walking_data : WalkingData) -> None:
-    plot_names = walking_data.get_plot_names()
+def handle_plots_and_selectbox(plot_dict : Optional[Dict[str,go.Figure]]) -> None:
+    if plot_dict is None:
+        return
     with st.container():
-        if not walking_data.is_empty():
-            segmented_control = st.segmented_control(
-                label="Type de graphe :",
-                options=plot_names,
-                selection_mode="single",
-                default="Line"
-            )
-            if segmented_control:
-                walking_data.cache_plots[segmented_control].show()
+        plot_names = list(plot_dict.keys())
+        segmented_control = st.segmented_control(
+            label="Type de graphe :",
+            options=plot_names,
+            selection_mode="single",
+            default="Line"
+        )
+        if segmented_control:
+            plot_dict[segmented_control].show()
 
 def main():
     st.set_page_config(page_title="Visualisation", page_icon="📈", layout="wide")
     st.title("Visualisation des données de démarche")
     all_files = get_all_files()
-    walking_data = handle_multiselect(all_files)
-    walking_data.make_all_plots()
-    handle_plots_and_selectbox(walking_data)
+    plot_dict = handle_multiselect(all_files)
+    handle_plots_and_selectbox(plot_dict)
 
 main()

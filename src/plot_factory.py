@@ -6,7 +6,7 @@ from src.plots.frequency_plot import FrequencyPlot
 from src.walking_recording import WalkingRecording
 from typing import List, Dict
 
-class WalkingData:
+class PlotFactory:
     """
     Class to handle movement data
     """
@@ -22,9 +22,14 @@ class WalkingData:
         self.walking_recordings = walking_recordings
         self.cache_plots = None
 
-    def make_all_plots(self) -> Dict:
+    def make_all_plots(self) -> None:
         self.cache_plots = {name: plot_class(self.walking_recordings) for name, plot_class in self.plot_classes.items()}
-        
+    
+    def get_all_plots(self) -> Dict:
+        if self.cache_plots is None:
+            self.make_all_plots()
+        return self.cache_plots
+    
     def get_plot_names(self) -> List[str]:
         if len(self.walking_recordings) == 0:
             return []
