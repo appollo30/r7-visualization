@@ -30,7 +30,7 @@ git clone https://github.com/appollo30/r7-visualization.git
 
 ### Sans Docker
 
-Pour utiliser l'application, il faut installer les dépendances du projet. Pour cela, il faut se placer à la racine du projet et exécuter la commande suivante :
+Pour utiliser l\'application, il faut installer les dépendances du projet. Pour cela, il faut se placer à la racine du projet et exécuter la commande suivante :
 
 ```bash
 pip install -r requirements.txt
