@@ -24,7 +24,7 @@ Pour cloner le projet, il suffit de lancer la commande suivante :
 
 ```bash
 git clone https://github.com/appollo30/r7-visualization.git
-
+```
 
 ## Utilisation
 
