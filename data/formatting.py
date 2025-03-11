@@ -98,7 +98,6 @@ if __name__ == "__main__":
     input_path = glob.glob("./raw/*")
     # Les noms de chaque membre du groupe, associés aux chemins de leurs fichiers
     members_names = {os.path.basename(elt): elt for elt in input_path}
-
     for name, path in members_names.items():
         input_files = glob.glob(f"{path}/*")
         print(name)
