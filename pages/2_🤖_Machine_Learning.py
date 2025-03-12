@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 from src.utils import get_all_files
 from src.walking_recording import WalkingRecording
 from src.plots.frequency_plot import FrequencyPlot
-import plotly.express as px
 
 @st.cache_data
 def get_metrics_df():
@@ -15,7 +15,14 @@ def get_metrics_df():
 
 def make_scatter(df, x, y):
     colors = px.colors.qualitative.Plotly
-    fig = px.scatter(df, x=x, y=y, color="Nom", hover_data={"Fichier source": True}, color_discrete_sequence=colors)
+    fig = px.scatter(
+        df,
+        x=x,
+        y=y,
+        color="Nom",
+        hover_data={"Fichier source": True},
+        color_discrete_sequence=colors
+    )
     fig.update_traces(textposition='top center', marker=dict(size=15))
     fig.update_layout(
         title=f"{x} vs {y}",
@@ -67,6 +74,6 @@ def main():
                 Pour commencer, nous allons utiliser un modèle de SVM pour classifier les enregistrements
                 de démarche. Nous allons utiliser les features extraites précédemment pour entraîner le modèle.
                 """)
-    
-    
+
+
 main()

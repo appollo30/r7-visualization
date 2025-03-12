@@ -1,9 +1,9 @@
-from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import streamlit as st
 import pandas as pd
+from src.plots.base_plot import MultipleRecordingPlot
 
 class FrequencyPlot(MultipleRecordingPlot):
     def stacked_fft_plot(self):
@@ -97,7 +97,7 @@ class FrequencyPlot(MultipleRecordingPlot):
             yaxis_title='Accélération (g)'
         )
         return fig
-        
+
     def get_metrics_df(self,needs_identifier=True):
         metrics = []
         for walking_recording in self.walking_recordings:
@@ -144,7 +144,7 @@ class FrequencyPlot(MultipleRecordingPlot):
         steps = self.steps_plot()
         stacked_fft = self.stacked_fft_plot()
         superimposed_fft = self.superimposed_fft_plot()
-        
+
         for i, walking_recording in enumerate(self.walking_recordings):
             fig.add_trace(steps.data[2*i], row=i+1, col=1)
             fig.add_trace(steps.data[2*i+1], row=i+1, col=1)
@@ -153,14 +153,14 @@ class FrequencyPlot(MultipleRecordingPlot):
             fig.update_xaxes(range=[0, 3], row=i+1, col=2)
             fig.add_trace(superimposed_fft.data[i], row=n+1, col=1)
             fig.update_xaxes(range=[0, 3], row=n+1, col=1)
-            
+
         fig.update_layout(
             title="Analyse de la fréquence des pas",
             height=n*200 + 400,
         )
-         
+
         self.cache_plot = fig
-    
+
     def show(self):
         self.cache_plot = self.get_plot()
         st.table(self.get_metrics_df(needs_identifier=True))

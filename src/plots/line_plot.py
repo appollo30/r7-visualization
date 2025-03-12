@@ -1,5 +1,5 @@
-from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
+from src.plots.base_plot import MultipleRecordingPlot
 
 class LinePlot(MultipleRecordingPlot):
     def make_plot(self) -> None:

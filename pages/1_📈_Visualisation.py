@@ -1,10 +1,10 @@
 from typing import List, Dict, Optional
 import streamlit as st
+import plotly.graph_objects as go
 from src.plot_factory import PlotFactory
 from src.walking_recording import WalkingRecording
-from src.utils import get_all_files 
-import plotly.graph_objects as go
-   
+from src.utils import get_all_files
+
 def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
     multiselect = st.multiselect(
         "Choisissez les fichiers à analyser",

@@ -1,6 +1,6 @@
-from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from src.plots.base_plot import MultipleRecordingPlot
 
 class XYZPlot(MultipleRecordingPlot):
     def make_plot(self) -> None:
@@ -49,5 +49,8 @@ class XYZPlot(MultipleRecordingPlot):
                 row=3,
                 col=1
                 )
-        fig.update_layout(hovermode="x unified", title_text="Accélération en X, Y et Z en fonction du temps")
+        fig.update_layout(
+            hovermode="x unified",
+            title_text="Accélération en X, Y et Z en fonction du temps"
+        )
         self.cache_plot = fig

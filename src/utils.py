@@ -1,8 +1,8 @@
 import random
-import streamlit as st
 from typing import List
 import glob
 import os
+import streamlit as st
 
 @st.cache_data
 def get_all_files() -> List[str]:

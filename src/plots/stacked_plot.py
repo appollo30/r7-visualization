@@ -1,6 +1,6 @@
-from src.plots.base_plot import MultipleRecordingPlot
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from src.plots.base_plot import MultipleRecordingPlot
 
 class StackedPlot(MultipleRecordingPlot):
     def make_plot(self) -> None:
