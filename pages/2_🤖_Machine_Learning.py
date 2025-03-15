@@ -1,13 +1,13 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-from src.utils import get_all_files
+from src.file_utils import get_all_file_names
 from src.walking_recording import WalkingRecording
 from src.plots.frequency_plot import FrequencyPlot
 
 @st.cache_data
 def get_metrics_df():
-    files = get_all_files()
+    files = get_all_file_names()
     recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in files]
     freq_plot = FrequencyPlot(recordings)
     metrics = freq_plot.get_metrics_df(needs_identifier=False)
@@ -51,7 +51,7 @@ def handle_scatterplots(metrics_df):
         st.write("### Veuillez sélectionner deux features")
 
 def main():
-    st.set_page_config(page_title="Machine Learning", page_icon="🤖", layout="wide")
+    st.set_page_config(page_title="Machine Learning", layout="wide")
     st.title("Analyse des données par machine learning")
     metrics_df = get_metrics_df()
     st.markdown("""

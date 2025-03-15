@@ -3,7 +3,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from src.plot_factory import PlotFactory
 from src.walking_recording import WalkingRecording
-from src.utils import get_all_files
+from src.file_utils import get_all_file_names
 
 def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
     multiselect = st.multiselect(
@@ -11,7 +11,7 @@ def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
         all_files,
         default=None,
         placeholder="Veuillez sélectionner des fichiers à analyser",
-        max_selections=6
+        max_selections=7
     )
     if len(multiselect) == 0:
         return None
@@ -35,9 +35,9 @@ def handle_plots_and_selectbox(plot_dict : Optional[Dict[str,go.Figure]]) -> Non
             plot_dict[segmented_control].show()
 
 def main():
-    st.set_page_config(page_title="Visualisation", page_icon="📈", layout="wide")
+    st.set_page_config(page_title="Visualisation", layout="wide")
     st.title("Visualisation des données de démarche")
-    all_files = get_all_files()
+    all_files = get_all_file_names()
     plot_dict = handle_multiselect(all_files)
     handle_plots_and_selectbox(plot_dict)
 
