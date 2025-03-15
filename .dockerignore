@@ -7,10 +7,11 @@ README.md
 tests.ipynb
 
 data/raw
-data/tests.ipynb
 
 .pylintrc
 
 pages/2_🤖_Machine_Learning.py
 
 image.png
+
+process_all_data.py

@@ -1,7 +1,5 @@
 __pycache__/
 
-data/tests.ipynb
-
 .pylintrc
 
-tests
+process_all_data.py
