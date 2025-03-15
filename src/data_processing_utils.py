@@ -1,5 +1,35 @@
 import pandas as pd
 import numpy as np
+import pandera as pa
+from pandera import Column, DataFrameSchema, Check
+
+schema = DataFrameSchema({
+    "X (g)": Column(float),
+    "Y (g)": Column(float),
+    "Z (g)": Column(float),
+    "Timestamp": Column(
+        pa.DateTime,
+        checks=[
+            # Vérifier que les timestamps sont triés dans l'ordre croissant
+            Check(
+                lambda ts: ts.is_monotonic_increasing, element_wise=False,
+                error="Les timestamps doivent être triés dans l'ordre croissant"
+            ),
+            # Vérifier que la durée entre le premier et le dernier timestamp est < 300 secondes
+            Check(
+                lambda ts: (ts.max() - ts.min()).total_seconds() < 300,
+                element_wise=False,
+                error="La durée entre le premier et le dernier timestamp doit être < 300 secondes"
+            ),
+            # Vérifier que la durée entre le premier et le dernier timestamp est > 3 secondes
+            Check(
+                lambda ts: (ts.max() - ts.min()).total_seconds() > 3,
+                element_wise=False,
+                error="La durée entre le premier et le dernier timestamp doit être > 3 secondes"
+            ),
+        ]
+    )
+})
 
 def _norm(df):
     """
@@ -66,6 +96,16 @@ def _reinterpolate(df):
     df['time (s)'] = df.index.total_seconds()
     return df
 
+def _validate(df):
+    """
+    Valider le dataframe
+    """
+    try:
+        schema.validate(df)
+        print("Validation réussie!")
+    except pa.errors.SchemaError as e:
+        print(f"Erreur de validation: {e}")
+
 def process(df):
     """
     Appliquer les transformations sur le dataframe
@@ -74,6 +114,9 @@ def process(df):
         pd.DataFrame: Le dataframe transformé
     """
     df["Timestamp"] = pd.to_datetime(df["Timestamp"])
+    
+    _validate(df)
+    
     df = _norm(df)
     precision = _get_timestamp_precision(df)
     if precision == "s":

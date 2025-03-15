@@ -5,7 +5,6 @@ from scipy.signal import find_peaks
 from scipy.signal import correlate
 import pandas as pd
 import numpy as np
-#import streamlit as st
 
 @dataclass
 class WalkingRecording:
@@ -20,7 +19,6 @@ class WalkingRecording:
     identifier = None
 
     @classmethod
-    #@st.cache_data
     def from_csv(cls,file_path):
         return cls(
             pd.read_csv(file_path),

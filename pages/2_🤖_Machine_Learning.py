@@ -1,14 +1,13 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-from src.file_utils import get_all_file_names
-from src.walking_recording import WalkingRecording
+from src.file_utils import get_all_file_names, get_specific_file
 from src.plots.frequency_plot import FrequencyPlot
 
 @st.cache_data
 def get_metrics_df():
     files = get_all_file_names()
-    recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in files]
+    recordings = [get_specific_file(f) for f in files]
     freq_plot = FrequencyPlot(recordings)
     metrics = freq_plot.get_metrics_df(needs_identifier=False)
     return pd.DataFrame(metrics)

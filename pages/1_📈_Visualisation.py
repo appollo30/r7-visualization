@@ -2,8 +2,7 @@ from typing import List, Dict, Optional
 import streamlit as st
 import plotly.graph_objects as go
 from src.plot_factory import PlotFactory
-from src.walking_recording import WalkingRecording
-from src.file_utils import get_all_file_names
+from src.file_utils import get_all_file_names, get_specific_file
 
 def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
     multiselect = st.multiselect(
@@ -15,7 +14,7 @@ def handle_multiselect(all_files : List[str]) -> Optional[Dict[str,go.Figure]]:
     )
     if len(multiselect) == 0:
         return None
-    recordings = [WalkingRecording.from_csv(f"data/processed/{f}") for f in multiselect]
+    recordings = [get_specific_file(f) for f in multiselect]
     plot_factory = PlotFactory(recordings)
     plot_dict = plot_factory.get_all_plots()
     return plot_dict
