@@ -192,10 +192,10 @@ def process(df):
         df = _set_time(df)
     else:
         df['time (s)'] = (df["Timestamp"] - df["Timestamp"].iloc[0]).dt.total_seconds()
-    df = _norm(df)
     df = df.drop(columns=["Timestamp"])
     cols = df.columns.tolist()
     cols = cols[-1:] + cols[:-1]
     df = df[cols]
     df = _reinterpolate(df)
+    df = _norm(df)
     return df
