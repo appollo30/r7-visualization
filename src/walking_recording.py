@@ -5,6 +5,7 @@ from scipy.signal import find_peaks
 from scipy.signal import correlate
 import pandas as pd
 import numpy as np
+from src.data_processing_utils import processed_schema
 
 @dataclass
 class WalkingRecording:
@@ -20,6 +21,8 @@ class WalkingRecording:
 
     @classmethod
     def from_csv(cls,file_path):
+        df = pd.read_csv(file_path)
+        df = processed_schema.validate(df)
         return cls(
             pd.read_csv(file_path),
             os.path.basename(os.path.dirname(file_path)),

@@ -4,6 +4,7 @@ import glob
 import os
 import streamlit as st
 from src.walking_recording import WalkingRecording
+from src.data_processing_utils import processed_schema
 
 @st.cache_data
 def get_all_file_names() -> List[str]:
@@ -14,6 +15,7 @@ def get_all_file_names() -> List[str]:
     return all_files_no_prefix
 
 @st.cache_data
-def get_specific_file(name: str) -> str:
+def get_specific_file(name: str) -> WalkingRecording:
     file_name = f"data/processed/{name}"
-    return WalkingRecording.from_csv(file_name)
+    walking_recording = WalkingRecording.from_csv(file_name)
+    return walking_recording
