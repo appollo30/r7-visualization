@@ -12,7 +12,7 @@ def handle_file_uploader() -> List[WalkingRecording]:
         data_type = col1.radio(
             "Quel type de données souhaitez-vous ajouter ?",
             ("Données brutes", "Données traitées"),
-            index=None
+            index=1
         )
         is_raw_data = data_type == "Données brutes"
         

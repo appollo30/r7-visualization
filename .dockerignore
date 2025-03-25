@@ -7,6 +7,7 @@ README.md
 tests.ipynb
 
 data/raw
+models
 
 .pylintrc
 
@@ -15,3 +16,5 @@ pages/2_🤖_Machine_Learning.py
 image.png
 
 process_all_data.py
+
+pages/3_Tester_le_modèle.py

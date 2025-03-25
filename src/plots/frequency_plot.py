@@ -80,8 +80,8 @@ class FrequencyPlot(MultipleRecordingPlot):
             )
             fig.add_trace(
                 go.Scatter(
-                    x=df['time (s)'][steps],
-                    y=df['acceleration (g)'][steps],
+                    x=df['time (s)'].iloc[steps],
+                    y=df['acceleration (g)'].iloc[steps],
                     mode='markers',
                     name='Pas détéctés',
                     line={"color" : "#FD3216"},

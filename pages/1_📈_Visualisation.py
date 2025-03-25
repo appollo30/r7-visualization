@@ -40,7 +40,7 @@ def main():
     all_walking_recordings = walking_recordings_from_database + walking_recordings_external
     
     markdown_text = "**Fichiers ajoutés**"
-    for recording in all_walking_recordings:
+    for recording in walking_recordings_external:
         markdown_text += f"\n- {recording.name}/{recording.file_name}"
     st.markdown(markdown_text)
     
