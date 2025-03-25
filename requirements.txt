@@ -6,3 +6,4 @@ scipy
 pandera
 tensorflow
 keras
+sktime
