@@ -39,11 +39,6 @@ def main():
     walking_recordings_external = handle_file_uploader()
     all_walking_recordings = walking_recordings_from_database + walking_recordings_external
     
-    markdown_text = "**Fichiers ajoutés**"
-    for recording in walking_recordings_external:
-        markdown_text += f"\n- {recording.name}/{recording.file_name}"
-    st.markdown(markdown_text)
-    
     if len(all_walking_recordings) > 0:
         plot_factory = PlotFactory(all_walking_recordings)
         plot_dict = plot_factory.get_all_plots()

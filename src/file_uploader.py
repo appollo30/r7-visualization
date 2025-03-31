@@ -5,22 +5,23 @@ import streamlit as st
 import pandas as pd
 import pandera as pa
 
-def handle_file_uploader() -> List[WalkingRecording]:
-    with st.expander("Ajouter vos propres fichiers"):
-        col1, col2 = st.columns([0.3, 0.7])
-        
-        data_type = col1.radio(
-            "Quel type de données souhaitez-vous ajouter ?",
-            ("Données brutes", "Données traitées"),
-            index=1
-        )
-        is_raw_data = data_type == "Données brutes"
-        
-        uploaded_files = col2.file_uploader(
-            "Choisissez des fichiers CSV",
-            type="csv",
-            accept_multiple_files=True
-        )
+def handle_file_uploader(verbose=True) -> List[WalkingRecording]:
+    expander = st.expander("Ajouter vos propres fichiers")
+    
+    col1, col2 = expander.columns([0.3, 0.7])
+    
+    data_type = col1.radio(
+        "Quel type de données souhaitez-vous ajouter ?",
+        ("Données brutes", "Données traitées"),
+        index=1
+    )
+    is_raw_data = data_type == "Données brutes"
+    
+    uploaded_files = col2.file_uploader(
+        "Choisissez des fichiers CSV",
+        type="csv",
+        accept_multiple_files=True
+    )
     
     walking_recordings = []
     for uploaded_file in uploaded_files:
@@ -37,4 +38,11 @@ def handle_file_uploader() -> List[WalkingRecording]:
             return []
         walking_recording = WalkingRecording(df, name="Custom",file_name=f"{uploaded_file.name}")
         walking_recordings.append(walking_recording)
+    
+    if verbose and len(walking_recordings) > 0:
+        markdown_text = "**Fichiers ajoutés**"
+        for recording in walking_recordings:
+            markdown_text += f"\n- {recording.name}/{recording.file_name}"
+        expander.markdown(markdown_text)
+    
     return walking_recordings
