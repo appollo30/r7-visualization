@@ -1,6 +1,4 @@
 from src.file_uploader import handle_file_uploader
-from src.walking_recording import WalkingRecording
-from src.plot_factory import PlotFactory
 from src.ml_utils import predict_from_wr, show_container, get_inference_session
 import streamlit as st
 
@@ -10,9 +8,9 @@ def main():
         layout="wide",
     )
     
-    st.title("Tester le modèle")
+    inference_session = get_inference_session("models/cnn_3layers_84.03_20250409003023/model_250.onnx")
     
-    inference_session = get_inference_session("models/cnn_3layers_79.30_20250408092059/model_250.onnx")
+    st.title("Tester le modèle")
     
     walking_recordings = handle_file_uploader()
     
