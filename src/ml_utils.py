@@ -8,9 +8,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import onnxruntime as ort
+import requests
 
 names = sorted(['Antoine', 'Corentin', 'Felix', 'Leo', 'Vladislav', 'Matthieu', 'Serge'])
 color_scheme = {name : color for name, color in zip(names,px.colors.qualitative.Plotly)}
+api_url = "https://r7-api-769783301787.europe-west9.run.app/post-string/"
 
 @st.cache_resource
 def get_inference_session(model_path : str) -> ort.InferenceSession:
@@ -59,13 +61,17 @@ def show_container(walking_recording : WalkingRecording, predicted_names : List[
     c = get_counter(predicted_names)
     n = len(predicted_names)
     with st.container(border=True,):
+        predicted_name = c[0][0]
+        # Post name to API
+        payload = f"{{\n  \"string_data\": \"{predicted_name}\"\n}}"
+        response = requests.post(api_url, data=payload, headers={"Content-Type": "application/json"})
         st.caption(f"{walking_recording.name}/{walking_recording.file_name}")
-        st.markdown(f"### Utilisateur prédit : **{c[0][0]}**")
+        st.markdown(f"### Utilisateur prédit : **{predicted_name}**")
         st.plotly_chart(make_area_plot(walking_recording.df, predicted_names), use_container_width=True)
         st.markdown("### Détail des prédictions :")
         for name, count in c:
             st.markdown(f"{name} : {count/n:.2%}")
-        
+
 
 def make_area_plot(df,predicted_names):
     gantt = to_gantt(predicted_names)
